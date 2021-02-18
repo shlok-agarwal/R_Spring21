@@ -10,32 +10,44 @@ library(ggplot2)
 # ## Import data
 setwd("C:/R_ws/R_Spring21/Assignment 3")
 callMeans <- function(callTypesArg, id){
-    ## Check for valid input
+
     ## Read all .csv files associated with id numbers included in the id argument
-    id = sprintf("%03d", id)
-    path <- paste0(paste0("callData/",id), ".csv")
-    CD_ID <- read.csv(path, header = TRUE)
+
+    # Initialize empty data frame
+    CD <- data.frame(dates= as.Date(character()), id= integer(0), totalCalls = integer(0), answeredCalls = integer(0), sales = integer(0))
+    for (val in id)
+    {
+        val_id = sprintf("%03d", val)
+        path <- paste0(paste0("callData/",val_id), ".csv")
+        CD_ID <- read.csv(path, header = TRUE)
+        CD <- rbind(CD, CD_ID)
+    }
+
     result <- data.frame(callTypes= numeric(0), mean= numeric(0), sd = numeric(0), max = numeric(0), min = numeric(0))
     
     # Sample the call type argument
-    if(callTypesArg == "all"){
-        callTypesArg = c("totalCalls", "answered", "sales")
+    if(length(callTypesArg) == 1)
+    {
+        if(callTypesArg == "all")
+        {
+            callTypesArg = c("totalCalls", "answeredCalls", "sales")
+        }
     }
 
     for (val in callTypesArg)
     {
 
-        if(val == "totalCalls"){
-            cName <- CD_ID$totalCalls
-        } else if(val == "answered"){
-            cName <- CD_ID$answered
-        } else if(val == "sales") {
-            cName <- CD_ID$sales
+        if(val == "totalCalls" || val == c("totalCalls")){
+            cName <- CD$totalCalls
+        } else if(val == "answeredCalls" || val == c("answeredCalls")){
+            cName <- CD$answeredCalls
+        } else if(val == "sales" || val == c("sales")) {
+            cName <- CD$sales
         } else {
             stop("invalid call type")
         }
 
-        SCD <- as.data.frame(CD_ID %>%  dplyr::summarize( 
+        SCD <- as.data.frame(CD %>%  dplyr::summarize( 
                                                         mean = mean(cName, na.rm = TRUE),
                                                         sd = sd(cName, na.rm = TRUE),
                                                         max = max(cName, na.rm = TRUE),
@@ -48,8 +60,11 @@ callMeans <- function(callTypesArg, id){
     return(result)
 }
 
-# a <- callMeans(callTypesArg = c("totalCalls", "sales"), id = 002)
-# a <- callMeans(callTypesArg = "all", id = 002)
-a <- callMeans(callTypesArg = "shlok", id = 002) # should say invalid
-
-print(a)
+op <- callMeans(callTypesArg = "all", id = 1:5)
+print(op)
+op <- callMeans(callTypesArg = c("totalCalls", "sales"), id = 100:125)
+print(op)
+op <- callMeans(callTypesArg = "Calls", id = 1:175)
+print(op)
+op <- callMeans(callTypesArg = c("answeredCalls"), id = c(2,6,17,29,100))
+print(op)
