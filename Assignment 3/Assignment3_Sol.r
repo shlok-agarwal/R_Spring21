@@ -50,11 +50,11 @@ callMeans <- function(callTypesArg, id){
         # need the data of the column and not the name of the column. If you pass it a string, you would be passing it the name of the column.
         # In turn, you want to pass it the data in the column.
         if(val == "totalCalls" || val == c("totalCalls")){
-            cName <- CD$totalCalls
+            cData <- CD$totalCalls
         } else if(val == "answeredCalls" || val == c("answeredCalls")){
-            cName <- CD$answeredCalls
+            cData <- CD$answeredCalls
         } else if(val == "sales" || val == c("sales")) {
-            cName <- CD$sales
+            cData <- CD$sales
         } else {
             # If the column names don't match, it is an invalid argument
             stop("invalid call type")
@@ -62,10 +62,10 @@ callMeans <- function(callTypesArg, id){
 
         # summarize the merged data by mean, sd, max and min.
         SCD <- as.data.frame(CD %>%  dplyr::summarize( 
-                                                        mean = mean(cName, na.rm = TRUE),
-                                                        sd = sd(cName, na.rm = TRUE),
-                                                        max = max(cName, na.rm = TRUE),
-                                                        min = min(cName, na.rm = TRUE))
+                                                        mean = mean(cData, na.rm = TRUE),
+                                                        sd = sd(cData, na.rm = TRUE),
+                                                        max = max(cData, na.rm = TRUE),
+                                                        min = min(cData, na.rm = TRUE))
                                     )
         
         # store the summary in the form of a data type because the output needs to be in this format
