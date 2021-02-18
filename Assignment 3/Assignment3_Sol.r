@@ -15,14 +15,15 @@ callMeans <- function(callTypes, id){
     id = sprintf("%03d", id)
     path <- paste0(paste0("callData/",id), ".csv")
     CD_ID <- read.csv(path, header = TRUE)
-    SCD001 <- as.data.frame(CD_ID %>%  dplyr::summarize( 
+    result <- data.frame(callTypes= numeric(0), mean= numeric(0), sd = numeric(0), max = numeric(0), min = numeric(0))
+    SCD <- as.data.frame(CD_ID %>%  dplyr::summarize( 
                                                       mean = mean(totalCalls, na.rm = TRUE),
                                                       sd = sd(totalCalls, na.rm = TRUE),
                                                       max = max(totalCalls, na.rm = TRUE),
                                                       min = min(totalCalls, na.rm = TRUE))
                                  )
-
-    result <- data.frame(callTypes = 'totalCalls', mean = SCD001$mean, sd = SCD001$sd, max = SCD001$max, min = SCD001$min)
+    res <- data.frame(callTypes = 'totalCalls', mean = SCD$mean, sd = SCD$sd, max = SCD$max, min = SCD$min)
+    result <- rbind(result, res)
     return(result)
 }
 
