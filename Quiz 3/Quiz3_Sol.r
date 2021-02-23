@@ -64,7 +64,11 @@ CF$gain=CF$dep_delay-CF$arr_delay
 # identify average gain grouped by the airline carrier
 avg_gain = CF %>% group_by(airline) %>% summarize(mean = mean(gain, na.rm = T))
 # filter mean betwen 0 and 3 as asked in the question
-avg_gain[which(avg_gain$mean>=0 && avg_gain$mean<=3),]
+avg_gain[which(avg_gain$mean>=0 & avg_gain$mean<=3), 1]
+
+# Solution
+# 1 SkyWest Airlines 
+# 2 US Air           
 
 
 # Q5
@@ -101,6 +105,7 @@ val1 <- arrange(val, desc(mean_hr)) %>%
 val2 <- arrange(val, desc(mean_gain)) %>%
           mutate(rank_gain = 1:nrow(val))
 
+# Option (d) is correct : GainRank = 2, GainPerHourRank = 12
 
 ## Q6
 # rename the faa column and merge both data frames
