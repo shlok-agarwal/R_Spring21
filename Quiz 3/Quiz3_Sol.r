@@ -83,21 +83,22 @@ r2 <- strptime(b, format = "%H:%M")
 c=difftime(r2,r1,units = "hours")
 
 # hours from above calculation. We only want the numeric part of it
-CF$hrs <- as.numeric(difftime(r2,r1,units = "hours"))
+# CF$hrs <- as.numeric(difftime(r2,r1,units = "hours"))
+CF$hrs <- CF$air_time/60
 CF$gain=CF$dep_delay-CF$arr_delay
 # gain per hour is gain divided by number of hours
 CF$gain_hr <- (CF$gain/CF$hrs)
 
 # group by carrier airlines and summarize by the sum of gain and gain per hour
-val = CF %>% group_by(airline) %>% summarize(sum_gain = sum(gain, na.rm = T),
-                                            sum_hr = sum(gain_hr, na.rm = T))
+val = CF %>% group_by(airline) %>% summarize(mean_gain = mean(gain, na.rm = T),
+                                            mean_hr = mean(gain_hr, na.rm = T))
                                     
 # to sort by gain per hour rank
-val1 <- arrange(val, desc(sum_hr)) %>%
+val1 <- arrange(val, desc(mean_hr)) %>%
           mutate(rank_gain_hr = 1:nrow(val))
 
 # to sort by gain rank
-val2 <- arrange(val, desc(sum_gain)) %>%
+val2 <- arrange(val, desc(mean_gain)) %>%
           mutate(rank_gain = 1:nrow(val))
 
 
