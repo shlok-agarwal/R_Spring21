@@ -82,10 +82,13 @@ r1 <- strptime(a, format = "%H:%M")
 r2 <- strptime(b, format = "%H:%M")
 c=difftime(r2,r1,units = "hours")
 
+# hours from above calculation. We only want the numeric part of it
 CF$hrs <- as.numeric(difftime(r2,r1,units = "hours"))
 CF$gain=CF$dep_delay-CF$arr_delay
+# gain per hour is gain divided by number of hours
 CF$gain_hr <- (CF$gain/CF$hrs)
 
+# group by carrier airlines and summarize by the sum of gain and gain per hour
 val = CF %>% group_by(airline) %>% summarize(sum_gain = sum(gain, na.rm = T),
                                             sum_hr = sum(gain_hr, na.rm = T))
                                     
