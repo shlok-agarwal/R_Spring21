@@ -148,6 +148,7 @@ callVolume <- function(empData, state){
 				CD <- rbind(CD, CD_ID)
 		}
 
+			# calculate all the things needed to make the table.
 			totalDays <- nrow(CD)
 			totalCalls <- sum(CD$totalCalls)
 			numEmployees <- nrow(city_data)
@@ -155,6 +156,7 @@ callVolume <- function(empData, state){
 			avgDaysPerEmployee <- round(totalDays/numEmployees)
 			avgCallsPerDay <- totalCalls/totalDays
 			
+			# add to the data frame
 			res <- data.frame(city = city_val, employees = numEmployees, totalDays = totalDays, totalCalls = totalCalls, avgCallsPerEmployee = avgCallsPerEmployee, avgDaysPerEmployee = avgDaysPerEmployee, avgCallsPerDay = avgCallsPerDay)
 			result <- rbind(result, res)
 		}
@@ -163,8 +165,10 @@ callVolume <- function(empData, state){
 	return(result)
 }
 
+# read csv
 emp <- read.csv("empData.csv", header = TRUE)
 
+# sample outputs
 op <- callVolume(empData = emp, state = "FL")
 print(op)
 
