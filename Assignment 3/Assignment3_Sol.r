@@ -117,10 +117,20 @@ print(op)
 # • avgDaysPerEmployee: totalDays / # of Employees
 # • avgCallsPerDay: totalCalls / totalDays
 
-callVolume <- function(empData, state){
+callVolume <- function(empData, state = "all"){
 
 	# Init
 	result <- NULL
+
+	# Check argument
+	# if all states needed
+	if(state == "all"){
+		state = unique(empData$State)
+	}
+
+	# Check if state is valid
+	if(!any(empData$State == state))
+		stop("no valid states entered")
 
 	# Filter data based on state
 	for (state_val in state) {
@@ -157,7 +167,7 @@ callVolume <- function(empData, state){
 			avgCallsPerDay <- totalCalls/totalDays
 			
 			# add to the data frame
-			res <- data.frame(city = city_val, employees = numEmployees, totalDays = totalDays, totalCalls = totalCalls, avgCallsPerEmployee = avgCallsPerEmployee, avgDaysPerEmployee = avgDaysPerEmployee, avgCallsPerDay = avgCallsPerDay)
+			res <- data.frame(city = city_val, state = state_val, employees = numEmployees, totalDays = totalDays, totalCalls = totalCalls, avgCallsPerEmployee = avgCallsPerEmployee, avgDaysPerEmployee = avgDaysPerEmployee, avgCallsPerDay = avgCallsPerDay)
 			result <- rbind(result, res)
 		}
 	}
@@ -172,7 +182,10 @@ emp <- read.csv("empData.csv", header = TRUE)
 op <- callVolume(empData = emp, state = "FL")
 print(op)
 
-op <- callVolume(empData = emp, state = "FL")
+op <- callVolume(empData = emp)
+print(op)
+
+op <- callVolume(empData = emp, state = "NY")
 print(op)
 
 op <- callVolume(empData = emp, state = c("TX", "PA", "GA"))
